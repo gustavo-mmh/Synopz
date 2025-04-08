@@ -30,19 +30,48 @@
 
         <form method="POST">
             <div class="mb-3">
-                <label for="api_key" class="form-label">API Key do Google AI Studio</label>
-                <input type="password" class="form-control" id="api_key" name="api_key"
-                       placeholder="Insira sua API Key" required>
+                <label for="api_key" class="form-label">API Key</label>
+                <input type="password" class="form-control" id="api_key" name="api_key" placeholder="Insira sua API Key" required>
             </div>
-
+            <div class="mb-3">
+                <label for="model_name" class="form-label">Escolha o modelo</label>
+                <select class="form-select" id="model_name" name="model_name" required>
+                    <option value="" disabled selected>Selecione um modelo</option>
+                </select>
+            </div>
             <div class="mb-3">
                 <label for="youtube_url" class="form-label">URL do YouTube</label>
-                <input type="url" class="form-control" id="youtube_url" name="youtube_url"
-                       placeholder="Cole o link do vídeo" value="{{ url }}" required>
+                <input type="text" class="form-control" id="youtube_url" name="youtube_url" placeholder="Insira a URL do YouTube" required>
             </div>
-
-            <button type="submit" class="btn btn-primary">Gerar Resumo</button>
+            <button type="submit" class="btn btn-primary">Enviar</button>
         </form>
+
+        <script>
+            document.getElementById('api_key').addEventListener('blur', function () {
+                const apiKey = this.value.trim();
+                if (apiKey) {
+                    fetch('/get_models', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ api_key: apiKey })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        const modelSelect = document.getElementById('model_name');
+                        modelSelect.innerHTML = '<option value="" disabled selected>Selecione um modelo</option>';
+                        data.models.forEach(model => {
+                            const option = document.createElement('option');
+                            option.value = model;
+                            option.textContent = model;
+                            modelSelect.appendChild(option);
+                        });
+                    })
+                    .catch(error => console.error('Erro ao carregar modelos:', error));
+                }
+            });
+        </script>
 
         {% if summary %}
         <div class="mt-4">

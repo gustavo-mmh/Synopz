@@ -1,6 +1,4 @@
 import logging
-
-from colorama import Fore
 from flask import Blueprint, render_template, request,jsonify
 from app.services.gemini_service import sum_up_with_gemini
 from app.services.youtube_service import extract_id_youtube, download_subtitle
