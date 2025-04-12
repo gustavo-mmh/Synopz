@@ -1,0 +1,65 @@
+<div class="background-video">
+  <video autoplay muted loop class="w-100">
+    <source src="./assets/background-video.mp4" type="video/mp4" />
+    <!-- Fallback for browsers that do not support HTML5 video -->
+    Seu navegador não suporta vídeos HTML5.
+  </video>
+</div>
+
+<div class="container mt-5 p-4 bg-light rounded shadow">
+  <h1 class="text-center mb-4">Resumidor de Vídeos do YouTube</h1>
+
+  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+  <form (ngSubmit)="summarize()">
+    <div class="mb-4">
+      <label for="apiKey" class="block text-gray-700 text-sm font-bold mb-2">API Key</label>
+      <input type="password" id="apiKey" class="form control shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+    </div>
+    <div class="flex items-center justify-center">
+      <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+    </div>
+    <div *ngIf="isApiValid" class="mb-3">
+      <label for="model" class="form-label">Escolha o modelo</label>
+      <select
+        id="model"
+        class="form-select"
+        [(ngModel)]="selectedModel"
+        name="model"
+        required
+      >
+        <option *ngFor="let model of models" [value]="model">{{ model }}</option>
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label for="youtubeUrl" class="form-label">URL do YouTube</label>
+      <input
+        type="url"
+        id="youtubeUrl"
+        class="form-control"
+        [(ngModel)]="youtubeUrl"
+        name="youtubeUrl"
+        (blur)="loadThumbnail()"
+        required
+      />
+    </div>
+
+    <div *ngIf="thumbnailUrl" class="mb-3">
+      <img [src]="thumbnailUrl" alt="Miniatura do vídeo" class="img-thumbnail" />
+    </div>
+    <button class="btn btn-primary">Gerar Resumo</button>
+  </form>
+
+  <div *ngIf="isLoading" class="text-center mt-4">
+    <p>Gerando resumo, por favor aguarde...</p>
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Carregando...</span>
+    </div>
+  </div>
+
+  <div *ngIf="summary" class="mt-4">
+    <h2>Resumo</h2>
+    <pre>{{ summary }}</pre>
+  </div>
+</div>
