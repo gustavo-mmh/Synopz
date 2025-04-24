@@ -1,65 +1,55 @@
-<div class="background-video">
-  <video autoplay muted loop class="w-100">
-    <source src="./assets/background-video.mp4" type="video/mp4" />
-    <!-- Fallback for browsers that do not support HTML5 video -->
+<!-- <div class="fixed top-0 left-0 w-full h-full -z-10 overflow-hidden">
+  <video autoplay muted loop class="w-full h-full object-cover">
+    <source src="assets/background-video.mp4" type="video/mp4" />
     Seu navegador não suporta vídeos HTML5.
   </video>
-</div>
+</div> -->
 
-<div class="container mt-5 p-4 bg-light rounded shadow">
-  <h1 class="text-center mb-4">Resumidor de Vídeos do YouTube</h1>
+<div class="max-w-2xl mx-auto mt-10 p-6 bg-white bg-opacity-80 backdrop-blur-md rounded-xl shadow-lg">
+  <h1 class="text-3xl font-bold text-center text-gray-800 mb-6"> Synopz</h1>
+  <h6 class="text-center text-secondary mb-4">Resumos Inteligentes de Vídeos</h6>
 
-  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
-
-  <form (ngSubmit)="summarize()">
+  <app-alert *ngIf="isVisible" [isVisible]="isVisible" [message]="alertMessage" [type]="alertType"></app-alert>
+  <form (ngSubmit)="summarize()" class="space-y-5">
     <div class="mb-4">
-      <label for="apiKey" class="block text-gray-700 text-sm font-bold mb-2">API Key</label>
-      <input type="password" id="apiKey" class="form control shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+      <label for="apiKey" class="block text-sm font-medium text-gray-700">Google AI Studio API Key</label>
+      <input name="apiKey" type="password" id="apiKey"
+        class="w-full mt-1 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
+        [(ngModel)]="apiKey" (blur)="validateApiKey(); isLoadingModel=true" required />
     </div>
-    <div class="flex items-center justify-center">
+    <div *ngIf="isLoadingModel" class="flex items-center justify-center">
       <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
     </div>
     <div *ngIf="isApiValid" class="mb-3">
-      <label for="model" class="form-label">Escolha o modelo</label>
-      <select
-        id="model"
-        class="form-select"
-        [(ngModel)]="selectedModel"
-        name="model"
-        required
-      >
+      <label for="model" class="block text-sm font-medium text-gray-700">Escolha o modelo</label>
+      <select id="model"
+        class="w-full mt-1 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
+        [(ngModel)]="selectedModel" name="model" required>
         <option *ngFor="let model of models" [value]="model">{{ model }}</option>
       </select>
     </div>
 
     <div class="mb-3">
-      <label for="youtubeUrl" class="form-label">URL do YouTube</label>
-      <input
-        type="url"
-        id="youtubeUrl"
-        class="form-control"
-        [(ngModel)]="youtubeUrl"
-        name="youtubeUrl"
-        (blur)="loadThumbnail()"
-        required
-      />
+      <label for="youtubeUrl" class="block text-sm font-medium text-gray-700">URL do YouTube</label>
+      <input type="url" id="youtubeUrl"
+        class="w-full mt-1 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
+        [(ngModel)]="youtubeUrl" name="youtubeUrl" (blur)="loadThumbnail()" required />
     </div>
 
     <div *ngIf="thumbnailUrl" class="mb-3">
-      <img [src]="thumbnailUrl" alt="Miniatura do vídeo" class="img-thumbnail" />
+      <img [src]="thumbnailUrl" alt="Miniatura do vídeo" class="mx-auto rounded-lg shadow-md w-64" />
     </div>
-    <button class="btn btn-primary">Gerar Resumo</button>
+    <button name="summarize" type="submit" [disabled]="!isApiValid || !selectedModel || !youtubeUrl || isLoading" (click)="summarize(); isLoading = true"
+      class="btn btn-primary w-full">Gerar
+      Resumo</button>
   </form>
 
-  <div *ngIf="isLoading" class="text-center mt-4">
-    <p>Gerando resumo, por favor aguarde...</p>
-    <div class="spinner-border text-primary" role="status">
-      <span class="visually-hidden">Carregando...</span>
-    </div>
+  <div *ngIf="isLoading" >
+    <app-loading size="lg" message="Gerando resumo, por favor aguarde..."></app-loading>
   </div>
 
-  <div *ngIf="summary" class="mt-4">
-    <h2>Resumo</h2>
-    <pre>{{ summary }}</pre>
+  <div *ngIf="summary" class="mt-6 bg-gray-100 p-4 rounded-md">
+    <h2 class="text-lg font-semibold text-gray-800 mb-2">📝 Resumo</h2>
+    <pre class="whitespace-pre-wrap text-sm text-gray-700">{{ summary }}</pre>
   </div>
 </div>

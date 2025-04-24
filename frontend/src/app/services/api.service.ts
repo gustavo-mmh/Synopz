@@ -15,7 +15,7 @@ export class ApiService {
   }
 
   summarizeVideo(apiKey: string, modelName: string, youtubeUrl: string): Observable<any> {
-    return this.http.post(`${this.baseUrl}/`, {
+    return this.http.post(`${this.baseUrl}/summarize`, {
       api_key: apiKey,
       model_name: modelName,
       youtube_url: youtubeUrl
