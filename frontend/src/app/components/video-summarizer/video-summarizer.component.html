@@ -1,55 +1,48 @@
-<!-- <div class="fixed top-0 left-0 w-full h-full -z-10 overflow-hidden">
-  <video autoplay muted loop class="w-full h-full object-cover">
-    <source src="assets/background-video.mp4" type="video/mp4" />
-    Seu navegador não suporta vídeos HTML5.
-  </video>
-</div> -->
-
 <app-alert *ngIf="isVisible" [isVisible]="isVisible" [message]="alertMessage" [type]="alertType"></app-alert>
-<div class="max-w-2xl mx-auto mt-10 p-6 bg-white bg-opacity-80 backdrop-blur-md rounded-xl shadow-lg">
-  <h1 class="text-3xl font-bold text-center text-gray-800 mb-6"> Synopz</h1>
-  <h6 class="text-center text-secondary mb-4">Resumos Inteligentes de Vídeos</h6>
+<div id="bg" class="min-h-screen bg-cover bg-center bg-repeat flex items-center justify-center px-4">
+<div class="absolute inset-0 bg-black bg-opacity-50 backdrop-blur-sm"></div>
+<div
+  class="relative z-10 w-full max-w-md bg-white/10 backdrop-blur-lg rounded-2xl shadow-2xl p-8 space-y-6 text-white animate-fade-in transition-all duration-700">
+    <div class="text-center">
+      <h1 class="text-3xl font-bold text-white-800">🎬 Synopz</h1>
+      <p class="text-white-500 mt-1">Resumos Inteligentes de Vídeos</p>
+    <form (ngSubmit)="summarize()" class="space-y-5">
+      <div class="mb-4">
+        <label for="apiKey" class="block text-sm font-medium text-white-700">Google AI Studio API Key</label>
+        <input name="apiKey" type="password" id="apiKey" placeholder="Insira sua API Key"
+          class="w-full bg-gray-700 mt-1 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          [(ngModel)]="apiKey" (blur)="validateApiKey(); isLoadingModel=true" required />
+      </div>
+      <div *ngIf="isLoadingModel" class="flex items-center justify-center">
+        <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+      <div *ngIf="isApiValid" class="mb-3">
+        <label for="model" class="block text-sm font-medium text-white-700">Escolha o modelo</label>
+        <select id="model" class="w-full  mt-1 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none text-white bg-gray-700" [(ngModel)]="selectedModel" name="model" required>
+          <option value="" disabled selected>Selecione um modelo</option>
+          <option *ngFor="let model of models" [value]="model">{{ model }}</option>
+        </select>
+      </div>
 
-  <form (ngSubmit)="summarize()" class="space-y-5">
-    <div class="mb-4">
-      <label for="apiKey" class="block text-sm font-medium text-gray-700">Google AI Studio API Key</label>
-      <input name="apiKey" type="password" id="apiKey"
-        class="w-full mt-1 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
-        [(ngModel)]="apiKey" (blur)="validateApiKey(); isLoadingModel=true" required />
-    </div>
-    <div *ngIf="isLoadingModel" class="flex items-center justify-center">
-      <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
-    </div>
-    <div *ngIf="isApiValid" class="mb-3">
-      <label for="model" class="block text-sm font-medium text-gray-700">Escolha o modelo</label>
-      <select id="model"
-        class="w-full mt-1 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
-        [(ngModel)]="selectedModel" name="model" required>
-        <option *ngFor="let model of models" [value]="model">{{ model }}</option>
-      </select>
-    </div>
+      <div class="mb-3">
+        <label for="youtubeUrl" class="block text-sm font-medium text-white-700">URL do YouTube</label>
+        <input type="url" id="youtubeUrl" placeholder="https://youtube.com/..."
+          class="w-full bg-gray-700 mt-1 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          [(ngModel)]="youtubeUrl" name="youtubeUrl" (blur)="loadThumbnail()" required />
+      </div>
 
-    <div class="mb-3">
-      <label for="youtubeUrl" class="block text-sm font-medium text-gray-700">URL do YouTube</label>
-      <input type="url" id="youtubeUrl"
-        class="w-full mt-1 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
-        [(ngModel)]="youtubeUrl" name="youtubeUrl" (blur)="loadThumbnail()" required />
+      <div *ngIf="thumbnailUrl" class="mb-3">
+        <img [src]="thumbnailUrl" alt="Miniatura do vídeo" class="mx-auto rounded-lg shadow-md w-64" />
+      </div>
+      <button name="summarize" type="submit" [disabled]="!isApiValid || !selectedModel || !youtubeUrl || isLoading"
+        (click)="summarize(); isLoading = true" class="btn btn-outline-white w-full">Gerar
+        Resumo</button>
+    </form>
+    <div *ngIf="summary" class="mt-6 bg-gray-100 p-4 rounded-md">
+      <h2 class="text-lg font-semibold text-white-800 mb-2">📝 Resumo</h2>
+      <pre class="whitespace-pre-wrap text-sm text-white-700">{{ summary }}</pre>
     </div>
-
-    <div *ngIf="thumbnailUrl" class="mb-3">
-      <img [src]="thumbnailUrl" alt="Miniatura do vídeo" class="mx-auto rounded-lg shadow-md w-64" />
+    <div *ngIf="isLoading">
+      <app-loading size="lg" message="Gerando resumo, por favor aguarde..."></app-loading>
     </div>
-    <button name="summarize" type="submit" [disabled]="!isApiValid || !selectedModel || !youtubeUrl || isLoading" (click)="summarize(); isLoading = true"
-      class="btn btn-primary w-full">Gerar
-      Resumo</button>
-  </form>
-
-  <div *ngIf="isLoading" >
-    <app-loading size="lg" message="Gerando resumo, por favor aguarde..."></app-loading>
   </div>
-
-  <div *ngIf="summary" class="mt-6 bg-gray-100 p-4 rounded-md">
-    <h2 class="text-lg font-semibold text-gray-800 mb-2">📝 Resumo</h2>
-    <pre class="whitespace-pre-wrap text-sm text-gray-700">{{ summary }}</pre>
-  </div>
-</div>
