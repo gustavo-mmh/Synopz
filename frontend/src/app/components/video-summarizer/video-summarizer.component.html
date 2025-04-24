@@ -5,11 +5,11 @@
   </video>
 </div> -->
 
+<app-alert *ngIf="isVisible" [isVisible]="isVisible" [message]="alertMessage" [type]="alertType"></app-alert>
 <div class="max-w-2xl mx-auto mt-10 p-6 bg-white bg-opacity-80 backdrop-blur-md rounded-xl shadow-lg">
   <h1 class="text-3xl font-bold text-center text-gray-800 mb-6"> Synopz</h1>
   <h6 class="text-center text-secondary mb-4">Resumos Inteligentes de Vídeos</h6>
 
-  <app-alert *ngIf="isVisible" [isVisible]="isVisible" [message]="alertMessage" [type]="alertType"></app-alert>
   <form (ngSubmit)="summarize()" class="space-y-5">
     <div class="mb-4">
       <label for="apiKey" class="block text-sm font-medium text-gray-700">Google AI Studio API Key</label>
