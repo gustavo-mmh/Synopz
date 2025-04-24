@@ -1,0 +1,8 @@
+<div *ngIf="isVisible" class="alert-container" [ngClass]="type">
+  <div class="alert-message">
+    {{ message }}
+  </div>
+  <div class="progress-bar">
+    <div class="progress" [style.width.%]="progress"></div>
+  </div>
+</div>
