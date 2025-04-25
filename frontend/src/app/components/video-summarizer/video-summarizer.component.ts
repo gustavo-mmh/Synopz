@@ -106,4 +106,26 @@ export class VideoSummarizerComponent {
       }
     );
   }
+
+  copySummary() {
+    if (this.summary) {
+      navigator.clipboard.writeText(this.summary).then(() => {
+        alert('Resumo copiado para a área de transferência!');
+      }, (err) => {
+        console.error('Erro ao copiar o resumo: ', err);
+      });
+    }
+  }
+
+  exportToDocx() {
+    if (this.summary) {
+      const blob = new Blob([this.summary], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'resumo.docx';
+      a.click();
+      window.URL.revokeObjectURL(url);
+    }
+  }
 }
