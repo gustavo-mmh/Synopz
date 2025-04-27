@@ -117,13 +117,13 @@ export class VideoSummarizerComponent {
     }
   }
 
-  exportToDocx() {
+  exportToDoc() {
     if (this.summary) {
       const blob = new Blob([this.summary], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = 'resumo.docx';
+      a.download = 'resumo.doc';
       a.click();
       window.URL.revokeObjectURL(url);
     }
