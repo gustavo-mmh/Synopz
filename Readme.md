@@ -1,8 +1,8 @@
 # Synopz
 
-![GitHub repo size](https://img.shields.io/github/repo-size/gustavo-mmh/Video_IA_Sumarize)
-![GitHub last commit](https://img.shields.io/github/last-commit/gustavo-mmh/Video_IA_Sumarize)
-![GitHub stars](https://img.shields.io/github/stars/gustavo-mmh/Video_IA_Sumarize?style=social)
+![GitHub repo size](https://img.shields.io/github/repo-size/gustavo-mmh/Synopz)
+![GitHub last commit](https://img.shields.io/github/last-commit/gustavo-mmh/Synopz)
+![GitHub stars](https://img.shields.io/github/stars/gustavo-mmh/Synopz?style=social)
 
 ## 📌 Sobre o Projeto
 
