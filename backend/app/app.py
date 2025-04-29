@@ -1,4 +1,7 @@
-from flask import Flask
+from flask import Flask4
+from flask_cors import CORS
+CORS(app)
+
 
 def create_app():
     app = Flask(__name__)
