@@ -1,0 +1,38 @@
+/* video-summarizer.component.scss */
+#bg {
+  background-image: url('../../../assets/bg1.jpg');
+  animation: slideBackground 50s infinite;
+  background-size: cover;
+  background-position: center;
+}
+
+/* Animação de fade-in (caso queira algo mais visual) */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.6s ease-in-out;
+}
+
+@keyframes slideBackground {
+  0% {
+    background-image: url('../../../assets/bg1.jpg');
+  }
+  33% {
+    background-image: url('../../../assets/bg2.jpg');
+  }
+  66% {
+    background-image: url('../../../assets/bg3.jpg'); /* Caso queira usar um vídeo, pode ser necessário ajustar */
+  }
+  100% {
+    background-image: url('../../../assets/bg2.jpg');
+  }
+}
