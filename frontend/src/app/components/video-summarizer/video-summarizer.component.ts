@@ -5,12 +5,15 @@ import { FormsModule } from '@angular/forms';
 import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { AlertComponent } from '../alert/alert.component';
 import { LoadingComponent } from '../loading/loading.component';
+import { LucideAngularModule, FileIcon, PlayCircle } from 'lucide-angular';
+import { LucideIconsModule } from '../../modules/lucide-icons/lucide-icons.module';
 @Component({
   selector: 'app-video-summarizer',
   templateUrl: './video-summarizer.component.html',
   styleUrls: ['./video-summarizer.component.scss'],
   standalone: true, // Define que este componente é um componente independente (standalone)
-  imports: [AlertComponent, CommonModule, FormsModule, NgbPaginationModule, LoadingComponent] // Importa os módulos necessários
+  imports: [AlertComponent, CommonModule, FormsModule,
+    NgbPaginationModule, LoadingComponent, LucideAngularModule, LucideIconsModule ] // Importa os módulos necessários
 })
 export class VideoSummarizerComponent {
   apiKey: string = '';
@@ -27,10 +30,14 @@ export class VideoSummarizerComponent {
   isLoadingModel: boolean = false;
   summary: string | null = null;
   errorMessage: string | null = null;
-
+  readonly FileIcon = FileIcon;
+  readonly PlayCircle = PlayCircle;
   constructor(private apiService: ApiService) { }
-
+  
   validateApiKey() {
+    debugger
+    if (this.apiKey !== "") {
+    this.isLoadingModel = true
     this.isVisible = false; // Redefine a visibilidade do alerta
     this.apiService.getModels(this.apiKey).subscribe(
       (response) => {
@@ -50,6 +57,7 @@ export class VideoSummarizerComponent {
         this.alertMessage = 'Api Inválida!';
       }
     );
+  }
   }
   loadThumbnail() {
     const videoId = this.extractVideoId(this.youtubeUrl);
@@ -110,8 +118,11 @@ export class VideoSummarizerComponent {
   copySummary() {
     if (this.summary) {
       navigator.clipboard.writeText(this.summary).then(() => {
-        alert('Resumo copiado para a área de transferência!');
+        this.isVisible = true
+        this.alertMessage = 'Resumo copiado para a área de transferência!';
       }, (err) => {
+        this.isVisible = true
+        this.alertMessage = 'Erro ao copiar o resumo:';
         console.error('Erro ao copiar o resumo: ', err);
       });
     }
@@ -126,6 +137,8 @@ export class VideoSummarizerComponent {
       a.download = 'resumo.doc';
       a.click();
       window.URL.revokeObjectURL(url);
+      this.isVisible = true
+      this.alertMessage = 'Documento exportado com sucesso!';
     }
   }
 }
