@@ -11,7 +11,8 @@ def extract_id_youtube(url):
 
 def download_subtitle(video_id):
     try:
-        transcript_list = YouTubeTranscriptApi.list(video_id)
+        ytt_api = YouTubeTranscriptApi()
+        transcript_list = ytt_api.list(str(video_id))
         transcript = next(
             (t for t in transcript_list if t.language_code in ['pt', 'en']),
             None
@@ -20,7 +21,7 @@ def download_subtitle(video_id):
             logging.warning(f"Nenhuma legenda encontrada em pt ou en para {video_id}")
             return None
         entries = transcript.fetch()
-        return ' '.join([entry['text'] for entry in entries])
+        return ' '.join([entry.text for entry in entries])
 
     except (TranscriptsDisabled, NoTranscriptFound) as e:
         logging.warning(f"Legendas não disponíveis para o vídeo {video_id}: {e}")

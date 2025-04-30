@@ -46,7 +46,6 @@ def summarize():
 @bp_api.route('/get_models', methods=['POST'])
 def get_models():
     try:
-        logging.info(Fore.BLUE + 'aqui' + Fore.RESET)
         data = request.get_json()
         api_key = data.get('api_key', '').strip()
         if not api_key:
