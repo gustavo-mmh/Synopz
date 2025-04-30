@@ -2,6 +2,7 @@ import re
 from youtube_transcript_api import YouTubeTranscriptApi
 from youtube_transcript_api._errors import TranscriptsDisabled, NoTranscriptFound
 import logging
+from colorama import Fore
 
 def extract_id_youtube(url):
     youtube_id_match = re.match(
@@ -12,7 +13,8 @@ def extract_id_youtube(url):
 def download_subtitle(video_id):
     try:
         ytt_api = YouTubeTranscriptApi()
-        transcript_list = ytt_api.list(str(video_id))
+        logging.info(Fore.BLUE + f"Resumindo vídeo {video_id}" + Fore.RESET)
+        transcript_list = ytt_api.list(video_id)
         transcript = next(
             (t for t in transcript_list if t.language_code in ['pt', 'en']),
             None

@@ -5,7 +5,7 @@ from colorama import Fore
 import google.generativeai as genai
 from app.services.youtube_service import extract_id_youtube, download_subtitle
 from app.services.gemini_service import sum_up_with_gemini
-
+logging.basicConfig(filename='', level=logging.DEBUG, format='%(asctime)s %(levelname)s %(message)s')
 bp_api = Blueprint('api', __name__)
 CORS(bp_api)
 
@@ -29,8 +29,8 @@ def summarize():
         video_id = extract_id_youtube(youtube_url)
         if not video_id:
             return jsonify({'error': 'URL do YouTube inválida'}), 400
-
-        text_caption = download_subtitle(video_id)
+        logging.info(Fore.BLUE + f"Resumindo vídeo {video_id}" + Fore.RESET)
+        text_caption = download_subtitle(str(video_id))
         if not text_caption:
             return jsonify({'error': 'Não foi possível baixar a legenda do vídeo'}), 500
 
