@@ -20,13 +20,15 @@ def download_subtitle(video_id):
             None
         )
         if not transcript:
-            logging.warning(f"Nenhuma legenda encontrada em pt ou en para {video_id}")
-            return None
+            logging.info(Fore.BLUE +f"Nenhuma legenda encontrada em pt ou en para {video_id}" + Fore.RESET)
+            return None, f"Nenhuma legenda encontrada em pt ou en para {video_id}"
         entries = transcript.fetch()
-        return ' '.join([entry.text for entry in entries])
+        text = ' '.join([entry.text for entry in entries])
+        return text, None
 
     except (TranscriptsDisabled, NoTranscriptFound) as e:
-        logging.warning(f"Legendas não disponíveis para o vídeo {video_id}: {e}")
+        logging.info(Fore.BLUE +f"Legendas não disponíveis para o vídeo {video_id}: {e}" + Fore.RESET)
+        return None, f"Legendas não disponíveis para o vídeo {video_id}"
     except Exception as e:
-        logging.exception(f"Erro inesperado ao baixar legenda do vídeo {video_id}: {e}")
-    return None
+        logging.info(Fore.BLUE +f"Erro inesperado ao baixar legenda do vídeo {video_id}: {e}" + Fore.RESET)
+    return None, f"Erro inesperado ao baixar legenda do vídeo {video_id}"

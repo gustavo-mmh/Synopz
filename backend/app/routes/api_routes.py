@@ -30,9 +30,9 @@ def summarize():
         if not video_id:
             return jsonify({'error': 'URL do YouTube inválida'}), 400
         logging.info(Fore.BLUE + f"Resumindo vídeo {video_id}" + Fore.RESET)
-        text_caption = download_subtitle(str(video_id))
+        text_caption, error_msg = download_subtitle(str(video_id))
         if not text_caption:
-            return jsonify({'error': 'Não foi possível baixar a legenda do vídeo'}), 500
+            return jsonify({'error': error_msg or 'Não foi possível baixar a legenda do vídeo'}), 500
 
         text_caption = text_caption[:10000]
         summary = sum_up_with_gemini(text_caption, api_key, model_name)
