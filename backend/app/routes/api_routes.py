@@ -39,7 +39,7 @@ def summarize():
         return jsonify({'summary': summary})
 
     except Exception as e:
-        logging.exception("Erro ao resumir vídeo")
+        logging.exception("Erro ao resumir vídeo: %s", str(e))
         return jsonify({'error': str(e)}), 500
 
 
