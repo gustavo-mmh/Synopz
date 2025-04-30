@@ -3,8 +3,8 @@ from flask import Blueprint, request, jsonify
 from flask_cors import CORS
 from colorama import Fore
 import google.generativeai as genai
-from app.services.gemini_service import sum_up_with_gemini
-from app.services.youtube_service import extract_id_youtube, download_subtitle
+from backend.app.services.youtube_service import extract_id_youtube, download_subtitle
+from backend.app.services.gemini_service import sum_up_with_gemini
 
 bp_api = Blueprint('api', __name__)
 CORS(bp_api)
