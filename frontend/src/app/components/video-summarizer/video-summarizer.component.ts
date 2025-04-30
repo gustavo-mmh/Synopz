@@ -35,7 +35,6 @@ export class VideoSummarizerComponent {
   constructor(private apiService: ApiService) { }
   
   validateApiKey() {
-    debugger
     if (this.apiKey !== "") {
     this.isLoadingModel = true
     this.isVisible = false; // Redefine a visibilidade do alerta
