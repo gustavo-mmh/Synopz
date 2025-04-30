@@ -99,9 +99,10 @@ export class VideoSummarizerComponent {
 
         },
         error: (error) => {
+          debugger
           this.isVisible = true;
           this.alertType = 'error';
-          this.alertMessage = 'Erro ao gerar resumo.';
+          this.alertMessage = this.formatApiError(error)  || 'Erro ao gerar resumo.';
           this.isLoading = false;
           console.error(error);
         },
@@ -141,4 +142,26 @@ export class VideoSummarizerComponent {
       this.alertMessage = 'Documento exportado com sucesso!';
     }
   }
+  formatApiError(error: any): string {
+    const message = error?.error?.error || 'Erro desconhecido';
+
+    if (message.includes('Video unavailable') || message.includes('Vídeo indisponível')) {
+      return 'Este vídeo está indisponível ou não possui legendas públicas.';
+    }
+
+    if (message.includes('Não foi possível baixar a legenda')) {
+      return 'Não conseguimos acessar a legenda deste vídeo. Tente outro.';
+    }
+
+    if (message.includes('API Key não fornecida')) {
+      return 'Por favor, informe sua chave de API Gemini.';
+    }
+
+    if (message.includes('Modelo não selecionado')) {
+      return 'Selecione um modelo antes de gerar o resumo.';
+    }
+
+    return 'Ocorreu um erro ao processar o vídeo. Verifique os dados e tente novamente.';
+  }
+
 }
