@@ -102,6 +102,7 @@ export class VideoSummarizerComponent {
           this.isVisible = true;
           this.alertType = 'error';
           this.alertMessage = 'Erro ao gerar resumo.';
+          this.isLoading = false;
           console.error(error);
         },
         complete: () => {
