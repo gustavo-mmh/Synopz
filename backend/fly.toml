@@ -1,9 +1,9 @@
-# fly.toml app configuration file generated for backend-weathered-dawn-3463 on 2025-05-02T16:31:57-03:00
+# fly.toml app configuration file generated for backend-synopz on 2025-05-02T16:44:16-03:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'backend-weathered-dawn-3463'
+app = 'backend-synopz'
 primary_region = 'gru'
 
 [build]
