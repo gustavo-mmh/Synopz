@@ -99,7 +99,6 @@ export class VideoSummarizerComponent {
 
         },
         error: (error) => {
-          debugger
           this.isVisible = true;
           this.alertType = 'error';
           this.alertMessage = this.formatApiError(error)  || 'Erro ao gerar resumo.';
