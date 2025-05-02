@@ -14,6 +14,6 @@ WORKDIR /app
 COPY --from=builder /app/.venv .venv/
 COPY . .
 
-ENV FLASK_APP=app.py  # Altere para main.py se necessário
+ENV FLASK_APP=app.py
 
 CMD ["/app/.venv/bin/gunicorn", "-b", "0.0.0.0:8080", "run:app"]
