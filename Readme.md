@@ -78,7 +78,7 @@ Acesse o frontend em [http://localhost:4200](http://localhost:4200).
 
 ## 🧪 Testes
 
-- **Backend:** Os testes estão na pasta `backend/app/tests/`. Execute com:
+- **Backend:** Os testes estão na pasta `backend/tests/`. Execute com:
   ```bash
   pytest
   ```
