@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://backend-synopz.fly.dev'
+  apiUrl: 'https://synopz.onrender.com'
 };
