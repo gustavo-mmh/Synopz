@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ApiService } from '../../services/api.service';
+import { YoutubeTranscript } from 'youtube-transcript';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
@@ -89,30 +90,43 @@ export class VideoSummarizerComponent {
     });
   }
 
-  summarize() {
+  async summarize() {
     this.summary = null;
-    this.apiService.summarizeVideo(this.apiKey, this.selectedModel, this.youtubeUrl).subscribe(
-      {
-        next: (response) => {
-          this.isLoading = true;
-          this.summary = response.summary;
+    this.isLoading = true;
+    this.isVisible = false;
 
+    try {
+      const transcriptResponse = await YoutubeTranscript.fetchTranscript(this.youtubeUrl);
+      if (!transcriptResponse || transcriptResponse.length === 0) {
+        throw new Error('Não foi possível obter a transcrição. Verifique se o vídeo possui legendas disponíveis.');
+      }
+
+      const transcriptText = transcriptResponse.map(item => item.text).join(' ');
+
+      this.apiService.summarizeText(this.apiKey, this.selectedModel, transcriptText).subscribe({
+        next: (response) => {
+          this.summary = response.summary;
+          this.alertType = 'success';
+          this.alertMessage = 'Resumo gerado com sucesso.';
+          this.isVisible = true;
         },
         error: (error) => {
-          this.isVisible = true;
           this.alertType = 'error';
-          this.alertMessage = this.formatApiError(error)  || 'Erro ao gerar resumo.';
-          this.isLoading = false;
+          this.alertMessage = this.formatApiError(error) || 'Erro ao gerar resumo.';
+          this.isVisible = true;
           console.error(error);
         },
         complete: () => {
-          this.alertType = 'success';
-          this.alertMessage = 'resumo gerado com sucesso.';
-          this.isVisible = true;
           this.isLoading = false;
         }
-      }
-    );
+      });
+    } catch (error: any) {
+      this.isLoading = false;
+      this.isVisible = true;
+      this.alertType = 'error';
+      this.alertMessage = this.formatApiError(error) || 'Erro ao buscar a legenda do vídeo.';
+      console.error(error);
+    }
   }
 
   copySummary() {

@@ -102,10 +102,7 @@
                 "output": "assets"
               }
             ],
-            "styles": [
-              "src/styles.scss",
-               "src/tailwind-output.css"
-            ],
+            "styles": [],
             "scripts": []
           }
         }

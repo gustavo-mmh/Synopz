@@ -3,7 +3,6 @@ from flask import Blueprint, request, jsonify
 from flask_cors import CORS
 from colorama import Fore
 import google.generativeai as genai
-from app.services.youtube_service import extract_id_youtube, download_subtitle
 from app.services.gemini_service import sum_up_with_gemini
 logging.basicConfig(filename='', level=logging.DEBUG, format='%(asctime)s %(levelname)s %(message)s')
 bp_api = Blueprint('api', __name__)
@@ -15,27 +14,21 @@ def summarize():
     try:
         data = request.get_json()
         api_key = data.get('api_key', '').strip()
-        youtube_url = data.get('youtube_url', '').strip()
+        transcript_text = data.get('transcript_text', '').strip()
         model_name = data.get('model_name', '').strip()
 
         if not api_key:
             return jsonify({'error': 'API Key não fornecida'}), 400
-        if not youtube_url:
-            return jsonify({'error': 'URL do YouTube não fornecida'}), 400
+        if not transcript_text:
+            return jsonify({'error': 'Texto da transcrição não fornecido'}), 400
         if not model_name:
             return jsonify({'error': 'Modelo não selecionado'}), 400
 
         genai.configure(api_key=api_key)
-        video_id = extract_id_youtube(youtube_url)
-        if not video_id:
-            return jsonify({'error': 'URL do YouTube inválida'}), 400
-        logging.info(Fore.BLUE + f"Resumindo vídeo {video_id}" + Fore.RESET)
-        text_caption, error_msg = download_subtitle(str(video_id))
-        if not text_caption:
-            return jsonify({'error': error_msg or 'Não foi possível baixar a legenda do vídeo'}), 500
 
-        text_caption = text_caption[:10000]
-        summary = sum_up_with_gemini(text_caption, api_key, model_name)
+        logging.info(Fore.BLUE + "Resumindo texto" + Fore.RESET)
+        transcript_text = transcript_text[:10000]
+        summary = sum_up_with_gemini(transcript_text, api_key, model_name)
         return jsonify({'summary': summary})
 
     except Exception as e:

@@ -15,11 +15,11 @@ export class ApiService {
     return this.http.post(`${this.baseUrl}/get_models`, { api_key: apiKey });
   }
 
-  summarizeVideo(apiKey: string, modelName: string, youtubeUrl: string): Observable<any> {
+  summarizeText(apiKey: string, modelName: string, transcriptText: string): Observable<any> {
     return this.http.post(`${this.baseUrl}/summarize`, {
       api_key: apiKey,
       model_name: modelName,
-      youtube_url: youtubeUrl
+      transcript_text: transcriptText
     });
   }
 }
